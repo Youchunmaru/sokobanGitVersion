@@ -1,4 +1,6 @@
-package de.uulm.sp.pvs.util;
+package de.uulm.sp.pvs.sokoban;
+
+import de.uulm.sp.pvs.util.*;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -11,36 +13,6 @@ import java.util.stream.Collectors;
  * */
 public class Sokoban {
 
-    /**
-     * holds the direction parameters for every move
-     * */
-    public enum Direction{NORTH(-1,0),
-        SOUTH(1,0),
-        WEST(0,-1),
-        EAST(0,1);
-        private final int first;
-        private final int second;
-
-        Direction(int first, int second){
-            this.first = first;
-            this.second = second;
-        }
-    }
-    /**
-     * generates a 7x7 play field
-     * @return the play field as char[][]
-     * */
-    public static char [][] gen7x7Field(){
-        char [][] sokoban = new char [7][];
-        sokoban[0] = "#######".toCharArray();
-        sokoban[1] = "#.....#".toCharArray();
-        sokoban[2] = "#..$..#".toCharArray();
-        sokoban[3] = "#.$@$.#".toCharArray();
-        sokoban[4] = "#..$..#".toCharArray();
-        sokoban[5] = "#.....#".toCharArray();
-        sokoban[6] = "#######".toCharArray();
-        return sokoban;
-    }
     /**
      * Finds the player in a sokoban play field
      * @param array the play field
@@ -86,17 +58,17 @@ public class Sokoban {
         int first = pair.getFirst();
         int second = pair.getSecond();
         //normal move
-        if (array[first + direction.first][second + direction.second] == '.') {
+        if (array[first + direction.first][second + direction.second] == ' ') {
 
-            array[first][second] = '.';
+            array[first][second] = ' ';
             array[first + direction.first][second + direction.second] = '@';
             return true;
         }
         //move with push
         if (array[first + direction.first][second + direction.second] == '$') {
-            if (array[first + (direction.first*2)][second + (direction.second*2)] == '.') {
+            if (array[first + (direction.first*2)][second + (direction.second*2)] == ' ') {
 
-                array[first][second] = '.';
+                array[first][second] = ' ';
                 array[first + direction.first][second + direction.second] = '@';
                 array[first + (direction.first*2)][second + (direction.second*2)] = '$';
                 return true;
