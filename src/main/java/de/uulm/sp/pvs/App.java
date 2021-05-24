@@ -26,7 +26,7 @@ public class App
             System.out.println(sokobanLevel.sokobanToString(sokobanLevel.level));
             System.out.println("Where do you want to go? (N/E/S/W or X to exit)");
 
-            Sokoban.movement(in.readLine().toUpperCase(),sokobanLevel);
+            playing = Sokoban.movement(in.readLine().toUpperCase(),sokobanLevel);
         }
 
     }
