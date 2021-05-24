@@ -19,7 +19,7 @@ public final class Pair<F extends Comparable,S extends Comparable> implements Co
      * @param first the first of the Pair
      * @param second the second of the Pair
      * */
-    Pair(F first,S second){
+    public Pair(F first,S second){
 
         this.first = first;
         this.second = second;
