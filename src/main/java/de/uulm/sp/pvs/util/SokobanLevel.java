@@ -4,6 +4,6 @@ public class SokobanLevel {
 
     public SokobanLevel(){
 
-
+        int test;
     }
 }
