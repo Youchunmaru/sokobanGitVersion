@@ -2,8 +2,6 @@ package de.uulm.sp.pvs.sokoban;
 
 import de.uulm.sp.pvs.util.*;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
  * @author Samuel Gröner
@@ -13,68 +11,27 @@ import java.util.stream.Collectors;
  * */
 public class Sokoban {
 
-    /**
-     * Finds the player in a sokoban play field
-     * @param array the play field
-     * @return the position of the player as a {@link Pair}
-     * */
-    public static Pair<Integer,Integer> findPlayer(char[][] array){
+    public static boolean movement(String direction, SokobanLevel sokobanLevel){
 
-        int first = -1;
-        int second = -1;
-
-        for (char[] value:array) {
-            first++;
-            for (char obj:value) {
-                second++;
-                if (obj == '@') {
-                    return new Pair<>(first,second);
-                }
-            }
-            second = -1;
+        switch (direction){
+            case "N":
+                sokobanLevel.move(sokobanLevel.level, Direction.NORTH);
+                break;
+            case "E":
+                sokobanLevel.move(sokobanLevel.level, Direction.EAST);
+                break;
+            case "S":
+                sokobanLevel.move(sokobanLevel.level, Direction.SOUTH);
+                break;
+            case "W":
+                sokobanLevel.move(sokobanLevel.level, Direction.WEST);
+                break;
+            case "X":
+                System.out.println("Bye");
+                return false;
+            default:
+                System.err.println("undefined input!");
         }
-        return new Pair<>(first,second);
-    }
-    /**
-     * Turns the play field into a String for output.
-     * @implNote replaces ", " with "" because Arrays.toString(char[] a)
-     *              puts them with ", " together
-     * @param array the play field
-     * @return the Sokoban play field as a String
-     * */
-    public static String sokobanToString(char[][] array){
-        return Arrays.stream(array).map((char[] value)-> Arrays.toString(value).replace(", ","")).
-                collect(Collectors.joining("\n"));
-    }
-    /**
-     * Moves the player in the particular {@link Direction}
-     * @param array is the play field
-     * @param direction the direction parameters
-     * @return if player was able to move or not as boolean
-     * */
-    public static boolean move(char[][] array, Direction direction){
-        //player cords:
-        Pair<Integer,Integer> pair = findPlayer(array);
-        int first = pair.getFirst();
-        int second = pair.getSecond();
-        //normal move
-        if (array[first + direction.first][second + direction.second] == ' ') {
-
-            array[first][second] = ' ';
-            array[first + direction.first][second + direction.second] = '@';
-            return true;
-        }
-        //move with push
-        if (array[first + direction.first][second + direction.second] == '$') {
-            if (array[first + (direction.first*2)][second + (direction.second*2)] == ' ') {
-
-                array[first][second] = ' ';
-                array[first + direction.first][second + direction.second] = '@';
-                array[first + (direction.first*2)][second + (direction.second*2)] = '$';
-                return true;
-            }
-        }
-        System.err.println("moving failed");
-        return false;
+        return true;
     }
 }
