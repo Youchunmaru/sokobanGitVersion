@@ -11,20 +11,23 @@ import de.uulm.sp.pvs.util.*;
  * */
 public class Sokoban {
 
+    /**
+     * i only put the movement function here so this class isnt useless
+     * */
     public static boolean movement(String direction, SokobanLevel sokobanLevel){
 
         switch (direction){
             case "N":
-                sokobanLevel.move(sokobanLevel.level, Direction.NORTH);
+                sokobanLevel.move(Direction.NORTH);
                 break;
             case "E":
-                sokobanLevel.move(sokobanLevel.level, Direction.EAST);
+                sokobanLevel.move(Direction.EAST);
                 break;
             case "S":
-                sokobanLevel.move(sokobanLevel.level, Direction.SOUTH);
+                sokobanLevel.move(Direction.SOUTH);
                 break;
             case "W":
-                sokobanLevel.move(sokobanLevel.level, Direction.WEST);
+                sokobanLevel.move(Direction.WEST);
                 break;
             case "X":
                 System.out.println("Bye");

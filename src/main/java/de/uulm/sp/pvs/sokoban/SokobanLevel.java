@@ -98,19 +98,18 @@ public class SokobanLevel {
     }
     /**
      * Finds the player in a sokoban play field
-     * @param array the play field
      * @return the position of the player as a {@link Pair}
      * */
-    public Pair<Integer,Integer> findPlayer(char[][] array){
+    public Pair<Integer,Integer> findPlayer(){
 
         int first = -1;
         int second = -1;
 
-        for (char[] value:array) {
+        for (char[] value:this.level) {
             first++;
             for (char obj:value) {
                 second++;
-                if (obj == '@') {
+                if (obj == '@' || obj == '+') {
                     return new Pair<>(first,second);
                 }
             }
@@ -122,42 +121,111 @@ public class SokobanLevel {
      * Turns the play field into a String for output.
      * @implNote replaces ", " with "" because Arrays.toString(char[] a)
      *              puts them with ", " together
-     * @param array the play field
      * @return the Sokoban play field as a String
      * */
-    public String sokobanToString(char[][] array){
-        return Arrays.stream(array).map((char[] value)-> Arrays.toString(value).replace(", ","")).
-                collect(Collectors.joining("\n"));
+    public String sokobanToString(){
+        return Arrays.stream(this.level).map((char[] value)-> Arrays.toString(value).
+                replace(", ","")).collect(Collectors.joining("\n"));
     }
     /**
      * Moves the player in the particular {@link Direction}
-     * @param array is the play field
      * @param direction the direction parameters
      * @return if player was able to move or not as boolean
      * */
-    public boolean move(char[][] array, Direction direction){
+    public boolean move(Direction direction){
         //player cords:
-        Pair<Integer,Integer> pair = findPlayer(array);
+        Pair<Integer,Integer> pair = findPlayer();
         int first = pair.getFirst();
         int second = pair.getSecond();
-        //normal move
-        if (array[first + direction.first][second + direction.second] == ' ') {
+        boolean normal = false;
+        boolean push = false;
 
-            array[first][second] = ' ';
-            array[first + direction.first][second + direction.second] = '@';
-            return true;
+        if (this.level[first + direction.first][second + direction.second] == '$') {
+            push = pushMove(first, second, direction);
+        }else{
+            normal = normalMove(first,second,direction);
         }
-        //move with push
-        if (array[first + direction.first][second + direction.second] == '$') {
-            if (array[first + (direction.first*2)][second + (direction.second*2)] == ' ') {
+        if (push==normal) {
+            System.err.println("moving failed");
+            return false;
+        }
+        return true;
+    }
+    /**
+     * checks if all boxes($) are on their final position('.')
+     * @return whether the game is won or not
+     * */
+    public boolean checkWinCondition(){
 
-                array[first][second] = ' ';
-                array[first + direction.first][second + direction.second] = '@';
-                array[first + (direction.first*2)][second + (direction.second*2)] = '$';
-                return true;
+        for (char[] value:this.level) {
+            for (char obj:value) {
+                if (obj == '.' || obj == '+') {
+                    return false;
+                }
             }
         }
-        System.err.println("moving failed");
+        return true;
+    }
+    /**
+     * manipulates the level to match the status after a pushing move
+     * @param first the y coordinate of the player
+     * @param second the x coordinate of the player
+     * @param direction the direction the player moves
+     * @return if the player could move or not
+     * */
+    public boolean pushMove(int first,int second, Direction direction){
+            if (this.level[first + (direction.first*2)][second + (direction.second*2)] == ' ') {
+
+                if (this.level[first][second] == '+') {
+                    this.level[first][second] = '.';
+                }else{
+                    this.level[first][second] = ' ';
+                }
+                this.level[first + direction.first][second + direction.second] = '@';
+                this.level[first + (direction.first*2)][second + (direction.second*2)] = '$';
+                return true;
+            }
+            if (this.level[first + (direction.first*2)][second + (direction.second*2)] == '.') {
+
+                if (this.level[first][second] == '+') {
+                    this.level[first][second] = '.';
+                }else{
+                    this.level[first][second] = ' ';
+                }
+                this.level[first + direction.first][second + direction.second] = '@';
+                this.level[first + (direction.first*2)][second + (direction.second*2)] = '*';
+                return true;
+            }
+        return false;
+    }
+    /**
+     * manipulates the level to match the status after a normal move
+     * @param first the y coordinate of the player
+     * @param second the x coordinate of the player
+     * @param direction the direction the player moves
+     * @return if the player could move or not
+     * */
+    public boolean normalMove(int first, int second, Direction direction){
+        if (this.level[first + direction.first][second + direction.second] == ' ') {
+
+            if (this.level[first][second] == '+') {
+                this.level[first][second] = '.';
+            }else{
+                this.level[first][second] = ' ';
+            }
+            this.level[first + direction.first][second + direction.second] = '@';
+            return true;
+        }
+        if (this.level[first + direction.first][second + direction.second] == '.') {
+
+            if (this.level[first][second] == '+') {
+                this.level[first][second] = '.';
+            }else{
+                this.level[first][second] = ' ';
+            }
+            this.level[first + direction.first][second + direction.second] = '+';
+            return true;
+        }
         return false;
     }
 }

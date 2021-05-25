@@ -23,10 +23,15 @@ public class App
         boolean playing = true;
 
         while(playing){
-            System.out.println(sokobanLevel.sokobanToString(sokobanLevel.level));
+            System.out.println(sokobanLevel.sokobanToString());
             System.out.println("Where do you want to go? (N/E/S/W or X to exit)");
 
             playing = Sokoban.movement(in.readLine().toUpperCase(),sokobanLevel);
+            if (sokobanLevel.checkWinCondition()) {
+                System.out.println(sokobanLevel.sokobanToString());
+                System.out.println("You win!");
+                playing = false;
+            }
         }
 
     }
