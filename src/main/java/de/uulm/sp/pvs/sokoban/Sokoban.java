@@ -5,18 +5,21 @@ import de.uulm.sp.pvs.util.*;
 
 /**
  * @author Samuel Gröner
- * implements the game sokoban
- * @version 21.05.20
- *          optimized all functions
+ *
  * */
 public class Sokoban {
 
     /**
-     * i only put the movement function here so this class isnt useless
+     * i only put the movement function here so this class isn't useless.
+     * handles movement according to given command input or ends the game
+     * if the player used the according input
+     * @param command the command input of the player
+     * @param sokobanLevel the level to move in
+     * @return true if player doesnt want to end the game
      * */
-    public static boolean movement(String direction, SokobanLevel sokobanLevel){
+    public static boolean command(String command, SokobanLevel sokobanLevel){
 
-        switch (direction){
+        switch (command){
             case "N":
                 sokobanLevel.move(Direction.NORTH);
                 break;

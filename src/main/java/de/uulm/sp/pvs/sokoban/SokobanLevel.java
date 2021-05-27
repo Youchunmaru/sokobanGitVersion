@@ -22,20 +22,37 @@ import java.util.stream.Collectors;
 
 /**
  * @author Samuel Gröner
- * implements the reading
+ *
  *
  * */
 public class SokobanLevel {
 
+    /** a list of authors of a SokobanLevel
+     * */
     public final List<String> authors;
+    /** the name of a SokobanLevel
+     * */
     public final String levelName;
+    /** the difficulty of a SokobanLevel
+     * */
     public final Difficulty difficulty;
+    /** the SokobanLevel as a char matrix
+     * */
     public final char[][] level;
+    /** the width of a SokobanLevel
+     * */
     public final int width;
+    /** the height of a SokobanLevel
+     * */
     public final int height;
 
+    /**
+     * creates a SokobanLevel using a xml
+     * @param path location of the level
+     * */
     public SokobanLevel(String path) throws SokobanException {
 
+        //Loads the schema
          Schema schema;
          try {
              schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).
@@ -44,7 +61,7 @@ public class SokobanLevel {
 
              throw new SokobanException("Error reading schema",saxException);
          }
-
+        //creates the document builder
          DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
          documentBuilderFactory.setSchema(schema);
          documentBuilderFactory.setNamespaceAware(true);
@@ -55,7 +72,7 @@ public class SokobanLevel {
         }catch (ParserConfigurationException parserConfigurationException){
             throw new SokobanException("Error in parser configuration",parserConfigurationException);
         }
-
+        //reads the document
         Document document;
         try{
             document = documentBuilder.parse(path);

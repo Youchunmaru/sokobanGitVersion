@@ -2,8 +2,6 @@ package de.uulm.sp.pvs.util;
 /**
  * @author Samuel Gröner
  * implements a pair of to objects
- * @version 21.05.20
- *          updated JavaDoc
  * */
 public final class Pair<F extends Comparable,S extends Comparable> implements Comparable<Pair<F,S>> {
     /**

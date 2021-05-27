@@ -1,9 +1,7 @@
 package de.uulm.sp.pvs.util;
 /**
  * @author Samuel Gröner
- * implements the diffrent difficultys as ints,
- * a higer number equals a higer diff
- *
+ * implements the diffrent difficultys of a SokobanLevel
  * */
 public enum Difficulty {NONE,
     EASY,
