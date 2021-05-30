@@ -6,5 +6,6 @@ package de.uulm.sp.pvs.util;
 public enum Difficulty {NONE,
     EASY,
     MEDIUM,
-    HARD;
+    HARD,
+    IMPOSSIBLE;
 }
