@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
 
 /**
  * @author Samuel Gröner
- *
+ * creates a Sokoban play field,
+ * It manipulates the playfield for every move to match the game status.
  *
  * */
 public class SokobanLevel {
@@ -79,22 +80,22 @@ public class SokobanLevel {
         }catch (SAXException | IOException exception){
             throw new SokobanException("Error while parsing file",exception);
         }
-
+        //gets the Author
         NodeList nodeListAuthors = document.getElementsByTagName("Author");
         authors = new LinkedList<>();
         for (int i = 0; i < nodeListAuthors.getLength(); i++) {
             authors.add(nodeListAuthors.item(i).getTextContent());
         }
-
+        //gets the levelName
         levelName = document.getElementsByTagName("LevelName").item(0).getTextContent();
-
+        //gets the Difficulty
         NodeList nodeListDifficulty = document.getElementsByTagName("Difficulty");
         if (nodeListDifficulty.getLength() == 0) {
             difficulty = Difficulty.NONE;
         }else{
             difficulty = Difficulty.valueOf(nodeListDifficulty.item(0).getTextContent());
         }
-
+        //gets the LevelData
         Node nodeListLevel = document.getElementsByTagName("LevelData").item(0);
         width = Integer.parseInt(nodeListLevel.getAttributes().getNamedItem("width").getTextContent());
         height = Integer.parseInt(nodeListLevel.getAttributes().getNamedItem("height").getTextContent());
@@ -159,6 +160,8 @@ public class SokobanLevel {
 
         if (this.level[first + direction.first][second + direction.second] == '$') {
             push = pushMove(first, second, direction);
+        }else if(this.level[first + direction.first][second + direction.second] == '*'){
+            push = pushOnGoalMove(first, second, direction);
         }else{
             normal = normalMove(first,second,direction);
         }
@@ -193,26 +196,42 @@ public class SokobanLevel {
     public boolean pushMove(int first,int second, Direction direction){
             if (this.level[first + (direction.first*2)][second + (direction.second*2)] == ' ') {
 
-                if (this.level[first][second] == '+') {
-                    this.level[first][second] = '.';
-                }else{
-                    this.level[first][second] = ' ';
-                }
+                changeHomeField(first, second);
                 this.level[first + direction.first][second + direction.second] = '@';
                 this.level[first + (direction.first*2)][second + (direction.second*2)] = '$';
                 return true;
             }
             if (this.level[first + (direction.first*2)][second + (direction.second*2)] == '.') {
 
-                if (this.level[first][second] == '+') {
-                    this.level[first][second] = '.';
-                }else{
-                    this.level[first][second] = ' ';
-                }
+                changeHomeField(first, second);
                 this.level[first + direction.first][second + direction.second] = '@';
                 this.level[first + (direction.first*2)][second + (direction.second*2)] = '*';
                 return true;
             }
+        return false;
+    }
+    /**
+     * manipulates the level to match the status after a pushing move on a goal field
+     * @param first the y coordinate of the player
+     * @param second the x coordinate of the player
+     * @param direction the direction the player moves
+     * @return if the player could move or not
+     * */
+    public boolean pushOnGoalMove(int first,int second, Direction direction){
+        if (this.level[first + (direction.first*2)][second + (direction.second*2)] == ' ') {
+
+            changeHomeField(first, second);
+            this.level[first + direction.first][second + direction.second] = '+';
+            this.level[first + (direction.first*2)][second + (direction.second*2)] = '$';
+            return true;
+        }
+        if (this.level[first + (direction.first*2)][second + (direction.second*2)] == '.') {
+
+            changeHomeField(first, second);
+            this.level[first + direction.first][second + direction.second] = '+';
+            this.level[first + (direction.first*2)][second + (direction.second*2)] = '*';
+            return true;
+        }
         return false;
     }
     /**
@@ -225,24 +244,28 @@ public class SokobanLevel {
     public boolean normalMove(int first, int second, Direction direction){
         if (this.level[first + direction.first][second + direction.second] == ' ') {
 
-            if (this.level[first][second] == '+') {
-                this.level[first][second] = '.';
-            }else{
-                this.level[first][second] = ' ';
-            }
+            changeHomeField(first, second);
             this.level[first + direction.first][second + direction.second] = '@';
             return true;
         }
         if (this.level[first + direction.first][second + direction.second] == '.') {
 
-            if (this.level[first][second] == '+') {
-                this.level[first][second] = '.';
-            }else{
-                this.level[first][second] = ' ';
-            }
+            changeHomeField(first, second);
             this.level[first + direction.first][second + direction.second] = '+';
             return true;
         }
         return false;
+    }
+    /**
+     * manipulates the level after a move of the player
+     * @param first the y coordinate of the player
+     * @param second the x coordinate of the player
+     * */
+    public void changeHomeField(int first, int second){
+        if (this.level[first][second] == '+') {
+            this.level[first][second] = '.';
+        }else{
+            this.level[first][second] = ' ';
+        }
     }
 }
